@@ -20,7 +20,7 @@ def read_config():
                c.get("github", "https://github.com/LordGrimmauld/Stonky")
 
 
-def restart():
+async def restart():
     await bot.close()
     os.execv(sys.executable, ['python'] + sys.argv)
     sys.exit()
@@ -54,7 +54,7 @@ if __name__ == "__main__":
                               description=output)
         await ctx.send(embed=embed)
         if output != "Already up to date.":
-            restart()
+            await restart()
 
 
     @bot.command("stop")
@@ -68,7 +68,7 @@ if __name__ == "__main__":
     async def _restart(ctx):
         if ctx.author.id != owner:
             return
-        restart()
+        await restart()
 
 
     print("starting bot...")
