@@ -41,6 +41,8 @@ if __name__ == "__main__":
 
     @bot.command("update")
     async def _update(ctx):
+        if ctx.author.id != 533668542562828311:
+            return
         output = subprocess.check_output(["git", "pull"]).decode("utf-8").strip()
         embed = discord.Embed(title="Updating bot...", url=github,
                               description=output)
@@ -52,7 +54,10 @@ if __name__ == "__main__":
 
     @bot.command("stop")
     async def _stop(ctx):
+        if ctx.author.id != 533668542562828311:
+            return
         await bot.close()
+
 
     print("starting bot...")
     bot.run(token)
