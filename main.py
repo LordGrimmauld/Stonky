@@ -35,6 +35,7 @@ if __name__ == "__main__":
     @bot.command("github")
     async def _github(ctx):
         embed = discord.embeds.Embed(title=github)
+        embed.set_thumbnail(url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
         await ctx.send(embed=embed)
 
 
@@ -52,7 +53,6 @@ if __name__ == "__main__":
     @bot.command("stop")
     async def _stop(ctx):
         await bot.close()
-
 
     print("starting bot...")
     bot.run(token)
