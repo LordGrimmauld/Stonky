@@ -41,22 +41,29 @@ if __name__ == "__main__":
 
     @bot.command("update")
     async def _update(ctx):
-        if ctx.author.id != 533668542562828311:
+        if ctx.author.id != owner:
             return
         output = subprocess.check_output(["git", "pull"]).decode("utf-8").strip()
         embed = discord.Embed(title="Updating bot...", url=github,
                               description=output)
         await ctx.send(embed=embed)
-        if output != "Already up to date." or True:
+        if output != "Already up to date.":
             os.execv(sys.executable, ['python'] + sys.argv)
             sys.exit()
 
 
     @bot.command("stop")
     async def _stop(ctx):
-        if ctx.author.id != 533668542562828311:
+        if ctx.author.id != owner:
             return
         await bot.close()
+
+    @bot.command("restart")
+    async def _restart(ctx):
+        if ctx.author.id != owner:
+            return
+        os.execv(sys.executable, ['python'] + sys.argv)
+        sys.exit()
 
 
     print("starting bot...")
