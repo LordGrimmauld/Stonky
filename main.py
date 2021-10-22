@@ -5,6 +5,10 @@ import json
 import sys
 from discord.ext import commands
 
+intents = discord.Intents.default()
+intents.members = True
+bot = commands.Bot(command_prefix='$', intents=discord.Intents.all())
+
 
 def read_config():
     with open("config.json", "r") as f:
@@ -16,14 +20,16 @@ def read_config():
                c.get("github", "https://github.com/LordGrimmauld/Stonky")
 
 
+def restart():
+    await bot.close()
+    os.execv(sys.executable, ['python'] + sys.argv)
+    sys.exit()
+
+
 if __name__ == "__main__":
     token, invite, owner, github = read_config()
     if token is None:
         sys.exit()
-
-    intents = discord.Intents.default()
-    intents.members = True
-    bot = commands.Bot(command_prefix='$', intents=discord.Intents.all())
 
 
     @bot.command("invite")
@@ -48,8 +54,7 @@ if __name__ == "__main__":
                               description=output)
         await ctx.send(embed=embed)
         if output != "Already up to date.":
-            os.execv(sys.executable, ['python'] + sys.argv)
-            sys.exit()
+            restart()
 
 
     @bot.command("stop")
@@ -58,12 +63,12 @@ if __name__ == "__main__":
             return
         await bot.close()
 
+
     @bot.command("restart")
     async def _restart(ctx):
         if ctx.author.id != owner:
             return
-        os.execv(sys.executable, ['python'] + sys.argv)
-        sys.exit()
+        restart()
 
 
     print("starting bot...")
