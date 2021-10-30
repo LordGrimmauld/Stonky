@@ -4,6 +4,7 @@ import discord
 import json
 import sys
 from discord.ext import commands
+import tradeelement
 
 intents = discord.Intents.default()
 intents.members = True

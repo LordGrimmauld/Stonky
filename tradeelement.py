@@ -2,6 +2,7 @@ import re
 import requests
 import json
 import time
+import asyncio
 
 _pattern = re.compile(r'(?<!^)(?=[A-Z])')
 min_time = 0
@@ -30,6 +31,7 @@ class TradeElement:
         self.sell_offers = 0
         for name, value in s.items():
             setattr(self, to_snake(name), value)
+        """
         r = requests.get(f"https://crossoutdb.com/data/item/all/{self.id}")
         detail_data = json.loads(r.text)["Data"]
         self.sell_price_trend = {e[0]: e[1] for e in detail_data[0] if e[0] > min_time and e[1] > 0}
@@ -40,10 +42,12 @@ class TradeElement:
             self.buy_price_trend) if self.buy_price_trend else 0
         self.average_margin = int((
                                       self.average_sell_price * 0.9 - self.average_buy_price if self.average_buy_price * self.average_sell_price else 0) * 100) / 100
+        """
 
     def __str__(self):
         return f"{self.name}, id: {self.id}"
 
+    """
     def get_average_margin(self):
         return self.average_margin
 
@@ -52,6 +56,7 @@ class TradeElement:
 
     def non_zero(self):
         return self.buy_orders > 0 and self.sell_offers > 0 and self.average_buy_price > 0 and self.average_sell_price > 0
+    """
 
 
 r = requests.get("https://crossoutdb.com/data/search")
@@ -75,3 +80,12 @@ def by_name(name):
     for e in data.values():
         if name in e.name.lower():
             print(e)
+
+
+async def refresh_loop():
+    while True:
+        await asyncio.sleep(60)
+        print("refreshing data")
+        data = {x["id"]: TradeElement(x) for x in filter(lambda e: not e["removed"], json.loads(r.text)["data"])}
+
+asyncio.ensure_future(refresh_loop())
