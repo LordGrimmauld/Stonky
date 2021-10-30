@@ -4,7 +4,8 @@ import discord
 import json
 import sys
 from discord.ext import commands
-import tradeelement
+
+import crafts
 
 intents = discord.Intents.default()
 intents.members = True
@@ -71,6 +72,11 @@ if __name__ == "__main__":
             return
         await restart()
 
+
+    @bot.command("craft")
+    async def _craft(ctx):
+        for embed in crafts.generate_embeds():
+            await ctx.send(embed=embed)
 
     print("starting bot...")
     bot.run(token)

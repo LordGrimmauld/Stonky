@@ -25,6 +25,9 @@ configure_max_history(seconds_in_a_week)  # only take the last week into account
 
 class TradeElement:
     def __init__(self, s):
+        self.crafting_margin = 0
+        self.craftable = False
+        self.faction = ''
         self.name = "no name"
         self.id = "no id"
         self.buy_orders = 0
@@ -46,6 +49,15 @@ class TradeElement:
 
     def __str__(self):
         return f"{self.name}, id: {self.id}"
+
+    def get_faction(self):
+        return self.faction
+
+    def is_craftable(self):
+        return self.craftable and self.faction
+
+    def get_crafting_margin(self):
+        return self.crafting_margin
 
     """
     def get_average_margin(self):
@@ -82,10 +94,25 @@ def by_name(name):
             print(e)
 
 
+refresh_listeners = []
+
+
 async def refresh_loop():
     while True:
         await asyncio.sleep(60)
         print("refreshing data")
         data = {x["id"]: TradeElement(x) for x in filter(lambda e: not e["removed"], json.loads(r.text)["data"])}
+        call_refresh_liseners()
+
+
+def register_refresh_listener(l):
+    l()
+    refresh_listeners.append(l)
+
+
+def call_refresh_liseners():
+    for l in refresh_listeners:
+        l()
+
 
 asyncio.ensure_future(refresh_loop())
