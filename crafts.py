@@ -33,6 +33,6 @@ def generate_embeds():
                               url=f"https://crossoutdb.com/#preset=crafting.rarity={rarity.lower()}.craftable=true",
                               color=convert(*(colors.get(rarity, [0, 0, 0]))))
         for faction, parts in factions.items():
-            embed.add_field(name=faction, value="\n".join(f"{part.name}: {part.format_margin}" for part in parts),
+            embed.add_field(name=faction, value="\n".join(f"{part.name}: {part.format_crafting_margin}" for part in parts),
                             inline=True)
         yield embed
